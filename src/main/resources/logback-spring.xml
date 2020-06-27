@@ -1,0 +1,177 @@
+<!--
+  ~ Copyright DataStax, Inc.
+  ~
+  ~ Please see the included license file for details.
+  -->
+
+<configuration scan="true">
+
+		<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <target>System.out</target>
+                <encoder>
+                    <pattern>{
+                        "unique_message_id":"%X{unique_message_id}",
+                        "market_code":"%X{market_code}",
+                        "source_app":"%X{source_app}",
+                        "ccp_event_type":"%X{ccp_event_type}",
+                        "profile-id":"%X{profile_id}",
+                        "dcs-id":"%X{dcs_id}",
+                        "logLevel":    "%level",
+                        "logThreadId": "%thread",
+                        "logClass":    "%class{32}",
+                        "logMethod":   "%method",
+                        "message": "%message",
+                        "exception": "%xEx{full}"
+                        }</pattern>
+                </encoder>
+            </appender>
+
+	<appender name="sparkFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${log.file.path.driver}.log</file>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	        <fileNamePattern>app-exec-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	        <maxFileSize>10MB</maxFileSize>    
+	        <maxHistory>30</maxHistory>
+	        <totalSizeCap>1GB</totalSizeCap>
+	    </rollingPolicy>
+	    <encoder>
+	        <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+	    </encoder>
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/processor.log</file>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                    <pattern>yyyy-MM-dd HH:mm:ss.SSSZ</pattern>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <arguments/>
+                <pattern>
+                    <pattern>
+                        {
+                        "unique_message_id":"%X{unique_message_id}",
+                        "market_code":"%X{market_code}",
+                        "source_app":"%X{source_app}",
+                        "ccp_event_type":"%X{ccp_event_type}",
+                        "profile-id":"%X{profile_id}",
+                        "dcs-id":"%X{dcs_id}",
+                        "logLevel":    "%level",
+                        "logThreadId": "%thread",
+                        "logClass":    "%class{32}",
+                        "logMethod":   "%method",
+                        "message": "%message",
+                        "exception": "%xEx{full}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>processor-app-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <root level="ERROR">
+	<appender-ref ref="STDOUT" />
+        <appender-ref ref="sparkFileAppender" />
+    </root>
+
+
+
+    <logger name="org.eclipse.jetty" level="ERROR"/>
+    <logger name="com.datastax.driver.core.CodecRegistry" level="ERROR"/>
+    <logger name="org.apache.hadoop.hive.metastore.ObjectStore" level="ERROR"/>
+    <logger name="org.apache.hadoop.util.NativeCodeLoader" level="ERROR"/>
+
+    <!-- Settings to quiet third party logs that are too verbose -->
+    <logger name="org.apache.spark.util.logging.FileAppender" level="INFO"/>
+    <logger name="org.spark_project.jetty" level="WARN"/>
+    <logger name="org.spark_project.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+    <logger name="org.apache.spark.repl.SparkIMain$exprTyper" level="ERROR"/>
+    <logger name="org.apache.spark.repl.SparkILoop$SparkILoopInterpreter" level="ERROR"/>
+    <logger name="org.apache.parquet" level="ERROR"/>
+    <logger name="parquet" level="ERROR"/>
+
+  <logger name="org.apache.spark.executor" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.storage" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.scheduler" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.SparkContext" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.CacheManager" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.MapOutputTracker" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.MapOutputTrackerMaster"
+    additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.ContextCleaner" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+
+  <logger name="org.apache.spark.rdd" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+  </logger>
+  
+  <logger name="org.apache.spark.rdd" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="sparkFileAppender" />
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+
+
+  <logger name="org.apache.spark.streaming.scheduler.JobScheduler" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="sparkFileAppender" />
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <logger name="com.example" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+    <!-- SPARK-9183: Settings to avoid annoying messages when looking up
+        nonexistent UDFs in SparkSQL with Hive support -->
+    <logger name="org.apache.hadoop.hive.metastore.RetryingHMSHandler" level="FATAL"/>
+    <logger name="org.apache.hadoop.hive.ql.exec.FunctionRegistry" level="ERROR"/>
+</configuration>
+

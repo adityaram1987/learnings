@@ -1,6 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://root:Sapient123@devconnector-higaz.mongodb.net/test?retryWrites=true&w=majority",
-    "jwtSecret": "mySecretToken",
-    "githubClientId":"a246eaf4c224e5c66485",
-    "githubSecret":"5ffc1314782ef4e13c5c8aaa0b0ba63e172cf72d"
-}

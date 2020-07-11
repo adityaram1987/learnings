@@ -138,9 +138,8 @@ public class LogExtractor {
 	private static Consumer<File> printInboundedLogsMethod(DateTime startDateTime, DateTime endDateTime) {
 		return fileName -> {
 			DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'");
-			FileInputStream inputStream;
 			try {
-				inputStream = new FileInputStream(fileName);
+			/*	inputStream = new FileInputStream(fileName);
 				sc = new Scanner(inputStream, "UTF-8");
 				while (sc.hasNextLine()) {
 					String logLine = sc.nextLine();
@@ -154,8 +153,28 @@ public class LogExtractor {
 					}
 				}
 				sc.close();
-				inputStream.close();
-			} catch (IOException e) {
+				inputStream.close(); */
+				int cores = Runtime.getRuntime().availableProcessors();
+				LOGGER.info("Setting the number of threads as per available processors : " + cores);
+				ForkJoinPool filterLogsThreadPool = new ForkJoinPool(cores);
+				
+				filterLogsThreadPool.submit( ()->
+						{
+							try {
+								Files.lines(fileName.toPath()).parallel().forEach(logLine -> {
+									String loggedDateString = logLine.substring(0, logLine.indexOf(','));
+									DateTime loggedDate = DateTime.parse(loggedDateString, dateFormatter);
+									if (loggedDate.isAfter(startDateTime) && loggedDate.isBefore(endDateTime)) {
+										System.out.println(logLine);
+									}
+								});
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						).get();
+				;
+			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
 

@@ -10,6 +10,9 @@ object LoadFile {
 
     val df = sqlContext.load("authors")
     df.show()
+    println("entries: " + df.count)
+    println("datatype: " + df.getClass)
     df.printSchema()
+
   }
 }

@@ -1,0 +1,31 @@
+Integration: API
+ScheduleFrequencyInMs: "5000"
+CloudwatchLogGroup: /{env}}/crds/api-logs
+measures:
+  name: rohit
+  Availability:
+      - Name: api_requests_total
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)
+
+      - Name: api_requests_sli
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)
+
+  Latency:
+      - Name: api_requests_total
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)
+
+      - Name: api_requests_sli
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)
+        
+  Throughput:
+      - Name: api_requests_total
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)
+
+      - Name: api_requests_sli
+        CloudwatchSearchKeyname: 200|500
+        CloudwatchQueryString: filter @message like /(?i)(" + keyName + ")/| stats count(*)

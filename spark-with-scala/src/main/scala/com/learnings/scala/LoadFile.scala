@@ -9,10 +9,14 @@ object LoadFile {
     val sqlContext = new SQLContext(sc)
 
     val df = sqlContext.load("authors")
+    val filtered = df.filter(df.col("name").equalTo("Kipling"))
     df.show()
     println("entries: " + df.count)
     println("datatype: " + df.getClass)
     df.printSchema()
+
+    println("filtered: ")
+    filtered.show()
 
   }
 }

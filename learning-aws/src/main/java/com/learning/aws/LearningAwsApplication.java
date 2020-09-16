@@ -34,8 +34,8 @@ public class LearningAwsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LearningAwsApplication.class, args);
 		AWSCredentials credentials = new BasicAWSCredentials(
-				  "AKIA5OYCKMQQ4SZXZNXK", 
-				  "TfaNNTXvcbaXAHvtBVjkLSMA2+BTbteRaBvDXnNF"
+				  "<Access_key>", 
+				  "<Secret_key>"
 				);
 		AmazonS3 amazonS3 = AmazonS3ClientBuilder
 				  .standard()

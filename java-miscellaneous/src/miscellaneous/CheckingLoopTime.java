@@ -30,6 +30,10 @@ public class CheckingLoopTime {
 		
 		System.out.println("start time: " + applicationStartTime);
 		System.out.println("end time: " + applicationEndTime);
+		
+		String s = "i am %s dynamically %s. My name is %s";
+		String ans = String.format(s, "loading","in string", "aditya");
+		System.out.println(ans);
 	}
 
 }

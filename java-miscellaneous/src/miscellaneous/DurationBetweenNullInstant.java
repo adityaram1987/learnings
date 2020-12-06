@@ -1,7 +1,11 @@
 package miscellaneous;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +28,14 @@ public class DurationBetweenNullInstant {
 		System.out.println("start time string: " + startString);
 		Instant start = Instant.parse(map.get("start_time"));
 		System.out.println("time difference: " + Duration.between(start, Instant.now()).toMillis());
+		
+		
+		Date startDate = Date.from(LocalDateTime.now(ZoneOffset.UTC).atZone(ZoneOffset.UTC).toInstant());
+		System.out.println(startDate);
+		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startDate);
+		System.out.println("formatted date is : " + date);
+		
+	
 	}
 
 }
